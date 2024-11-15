@@ -1,5 +1,9 @@
 const multiplyBy = (value, factor) => {
-  return Number.parseFloat(value) * factor;
+  if (!value) return;
+  const parsedValue = parseFloat(value);
+
+  if (Number.isNaN(parsedValue)) return;
+  return value * factor;
 };
 
 module.exports = { multiplyBy };

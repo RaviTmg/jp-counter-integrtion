@@ -11,10 +11,9 @@ async function executeAction(req, res) {
     const { boardId, itemId, sourceColumnId, targetColumnId } = inputFields;
 
     const value = await mondayService.getColumnValue(shortLivedToken, itemId, sourceColumnId);
-    if (!value) {
-      return res.status(200).send({});
-    }
+
     const result = calculationService.multiplyBy(value, 5);
+
     await itemRepo.upsertItem({ itemId, boardId, value, result });
 
     await mondayService.changeColumnValue(shortLivedToken, boardId, itemId, targetColumnId, result);

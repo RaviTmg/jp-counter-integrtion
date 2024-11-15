@@ -9,7 +9,11 @@ describe('multiplyBy', () => {
     expect(calculationService.multiplyBy('11', 5)).toBe(55);
   });
 
-  test('gives NaN for unparseable values', () => {
-    expect(calculationService.multiplyBy('aa', 5)).toBe(NaN);
+  test('gives undefined for unparseable values', () => {
+    expect(calculationService.multiplyBy('aa', 5)).toBe(undefined);
+  });
+
+  test('gives undefined for undefined values', () => {
+    expect(calculationService.multiplyBy(undefined, 5)).toBe(undefined);
   });
 });

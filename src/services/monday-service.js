@@ -38,9 +38,15 @@ const changeColumnValue = async (token, boardId, itemId, columnId, value) => {
         }
       }
       `;
-    const variables = { boardId, columnId, itemId, value: JSON.stringify(value) };
+    const variables = {
+      boardId,
+      columnId,
+      itemId,
+      value: [undefined, null].includes(value) ? '""' : JSON.stringify(value),
+    };
 
     const response = await mondayClient.api(query, { variables });
+    console.log(response);
     return response;
   } catch (err) {
     console.error(err);
