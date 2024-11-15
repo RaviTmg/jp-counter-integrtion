@@ -1,9 +1,8 @@
 const initMondayClient = require('monday-sdk-js');
-
+// TODO: write tests
 const getColumnValue = async (token, itemId, columnId) => {
   try {
-    const mondayClient = initMondayClient();
-    mondayClient.setToken(token);
+    const mondayClient = initMondayClient({ token });
     mondayClient.setApiVersion('2024-04');
 
     const query = `query($itemId: [ID!], $columnId: [String!]) {
@@ -46,7 +45,6 @@ const changeColumnValue = async (token, boardId, itemId, columnId, value) => {
     };
 
     const response = await mondayClient.api(query, { variables });
-    console.log(response);
     return response;
   } catch (err) {
     console.error(err);

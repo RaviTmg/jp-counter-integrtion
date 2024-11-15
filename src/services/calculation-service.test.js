@@ -15,5 +15,7 @@ describe('multiplyBy', () => {
 
   test('gives undefined for undefined values', () => {
     expect(calculationService.multiplyBy(undefined, 5)).toBe(undefined);
+    expect(calculationService.multiplyBy(null, 5)).toBe(undefined);
+    expect(calculationService.multiplyBy('', 5)).toBe(undefined);
   });
 });
