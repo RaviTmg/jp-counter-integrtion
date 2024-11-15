@@ -1,5 +1,6 @@
 const mondayService = require('../services/monday-service');
 const calculationService = require('../services/calculation-service');
+const ItemModel = require('../models/item');
 
 async function executeAction(req, res) {
   const { shortLivedToken } = req.session;
@@ -7,16 +8,22 @@ async function executeAction(req, res) {
 
   try {
     const { inputFields } = payload;
-    console.log(inputFields);
     const { boardId, itemId, sourceColumnId, targetColumnId } = inputFields;
 
     const value = await mondayService.getColumnValue(shortLivedToken, itemId, sourceColumnId);
     if (!value) {
       return res.status(200).send({});
     }
-    const transformedValue = calculationService.multiplyBy(value, 5);
+    const result = calculationService.multiplyBy(value, 5);
 
-    await mondayService.changeColumnValue(shortLivedToken, boardId, itemId, targetColumnId, transformedValue);
+    const existingItem = await ItemModel.findOne({ itemId });
+    if (existingItem) {
+      await ItemModel.findOneAndUpdate({ itemId }, { value, result });
+    } else {
+      await new ItemModel({ itemId, value, result }).save();
+    }
+
+    await mondayService.changeColumnValue(shortLivedToken, boardId, itemId, targetColumnId, result);
 
     return res.status(200).send({});
   } catch (err) {
