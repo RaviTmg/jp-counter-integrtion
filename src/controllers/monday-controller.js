@@ -1,6 +1,6 @@
 const mondayService = require('../services/monday-service');
 const calculationService = require('../services/calculation-service');
-const ItemModel = require('../models/item');
+const itemRepo = require('../repo/item-repo');
 
 async function executeAction(req, res) {
   const { shortLivedToken } = req.session;
@@ -15,13 +15,7 @@ async function executeAction(req, res) {
       return res.status(200).send({});
     }
     const result = calculationService.multiplyBy(value, 5);
-
-    const existingItem = await ItemModel.findOne({ itemId });
-    if (existingItem) {
-      await ItemModel.findOneAndUpdate({ itemId }, { value, result });
-    } else {
-      await new ItemModel({ itemId, value, result }).save();
-    }
+    await itemRepo.upsertItem({ itemId, value, result });
 
     await mondayService.changeColumnValue(shortLivedToken, boardId, itemId, targetColumnId, result);
 
