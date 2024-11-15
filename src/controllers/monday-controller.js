@@ -15,7 +15,7 @@ async function executeAction(req, res) {
       return res.status(200).send({});
     }
     const result = calculationService.multiplyBy(value, 5);
-    await itemRepo.upsertItem({ itemId, value, result });
+    await itemRepo.upsertItem({ itemId, boardId, value, result });
 
     await mondayService.changeColumnValue(shortLivedToken, boardId, itemId, targetColumnId, result);
 
